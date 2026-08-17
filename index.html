@@ -18,8 +18,9 @@
             --text-secondary: #94a3b8;
             --accent: #818cf8;
             --accent-dark: #6366f1;
-            --danger: #f87171;
+            --danger: #fb7185;
             --success: #34d399;
+            --warning: #fbbf24;
             --border: #334155;
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             --radius: 20px;
@@ -35,7 +36,7 @@
 
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: #0a0f1a;
+            background: linear-gradient(145deg, #0a0f1a 0%, #111827 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -89,6 +90,26 @@
             font-size: 13px;
             color: #c7d2fe;
             font-weight: 500;
+        }
+        .stats-bar {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        .stat-chip {
+            background: rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #e0e7ff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .stat-chip i {
+            font-size: 14px;
         }
         .fab-add-client {
             width: 48px;
@@ -148,7 +169,7 @@
             font-size: 11px;
             font-weight: 600;
             padding: 8px 12px;
-            border-radius: 16px;
+            border-radius: 20px;
             transition: all 0.2s;
             cursor: pointer;
             border: none;
@@ -157,8 +178,9 @@
             text-align: center;
         }
         .nav-item.active {
-            color: var(--accent);
-            background: rgba(129, 140, 248, 0.1);
+            color: #fff;
+            background: rgba(129, 140, 248, 0.25);
+            box-shadow: 0 2px 8px rgba(129, 140, 248, 0.2);
         }
         .nav-item i {
             font-size: 20px;
@@ -178,6 +200,53 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Buscador y orden */
+        .client-tools {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .search-box {
+            flex: 1;
+            position: relative;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+        .search-box input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+        }
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+        .btn-ordenar {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            width: 44px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 16px;
+        }
+        .btn-ordenar:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
         /* Tarjetas de cliente */
         .cliente-card {
             background: var(--bg-card);
@@ -190,7 +259,23 @@
             align-items: center;
             transition: all 0.2s;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
+        .cliente-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--success);
+            border-radius: 0 4px 4px 0;
+        }
+        .cliente-card.deuda-roja::before { background: var(--danger); }
+        .cliente-card.deuda-naranja::before { background: var(--warning); }
+        .cliente-card.deuda-verde::before { background: var(--success); }
+
         .cliente-card:active {
             transform: scale(0.98);
             background: #1e293b;
@@ -200,6 +285,7 @@
             align-items: center;
             gap: 14px;
             flex: 1;
+            min-width: 0;
         }
         .avatar {
             width: 44px;
@@ -219,14 +305,16 @@
             flex-direction: column;
             gap: 4px;
             min-width: 0;
+            width: 100%;
         }
         .nombre-cliente {
-            font-weight: 700;
-            font-size: 16px;
+            font-weight: 800;
+            font-size: 17px;
             color: #f1f5f9;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            letter-spacing: -0.2px;
         }
         .badge-deuda {
             display: inline-block;
@@ -237,23 +325,45 @@
             width: fit-content;
         }
         .badge-deuda.rojo {
-            background: rgba(248, 113, 113, 0.15);
-            color: #f87171;
+            background: rgba(251, 113, 133, 0.15);
+            color: #fb7185;
         }
         .badge-deuda.verde {
             background: rgba(52, 211, 153, 0.15);
             color: #34d399;
         }
+        .badge-deuda.naranja {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+        }
+        .progreso-pago {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+        .progreso-pago .barra {
+            height: 100%;
+            background: var(--success);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        .progreso-pago .barra.roja { background: var(--danger); }
+        .progreso-pago .barra.naranja { background: var(--warning); }
+
         .acciones-cliente {
             display: flex;
             gap: 8px;
             align-items: center;
             flex-shrink: 0;
+            margin-left: 8px;
         }
         .btn-icono {
             width: 40px;
             height: 40px;
-            border-radius: 12px;
+            border-radius: 50%;
             background: rgba(255,255,255,0.05);
             border: 1px solid var(--border);
             display: flex;
@@ -268,6 +378,9 @@
             background: rgba(248,113,113,0.1);
             color: #f87171;
             border-color: transparent;
+            border-radius: 12px;
+            width: 36px;
+            height: 36px;
         }
 
         /* Formularios */
@@ -358,6 +471,10 @@
             margin-top: 5px;
             font-size: 14px;
         }
+        .btn-agregar-producto:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
         .btn-primary {
             background: var(--accent);
             color: #0f172a;
@@ -369,15 +486,19 @@
             width: 100%;
             cursor: pointer;
             transition: 0.2s;
-            box-shadow: 0 4px 14px rgba(129, 140, 248, 0.3);
+            box-shadow: 0 4px 14px rgba(129, 140, 248, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
         }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(129, 140, 248, 0.5);
+        }
         .btn-primary:active {
-            transform: scale(0.97);
-            background: #6366f1;
+            transform: scale(0.96);
+            box-shadow: none;
         }
 
         /* Total */
@@ -388,6 +509,9 @@
             font-size: 20px;
             margin: 20px 0;
             color: #f1f5f9;
+            background: rgba(129, 140, 248, 0.1);
+            padding: 16px;
+            border-radius: var(--radius-sm);
         }
 
         /* Modal */
@@ -412,6 +536,14 @@
             box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
             animation: slideUpModal 0.3s ease;
             color: #e2e8f0;
+            position: relative;
+        }
+        .modal-handle {
+            width: 40px;
+            height: 4px;
+            background: #475569;
+            border-radius: 2px;
+            margin: 0 auto 16px;
         }
         @keyframes slideUpModal {
             from { transform: translateY(100%); }
@@ -425,11 +557,22 @@
             font-weight: 700;
         }
         .cerrar-btn {
-            background: transparent;
+            background: rgba(255,255,255,0.1);
             border: none;
-            font-size: 26px;
+            font-size: 24px;
             color: #94a3b8;
             cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+        .cerrar-btn:hover {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
         }
 
         /* Tablas en detalle */
@@ -447,6 +590,33 @@
         .detalle-tabla th {
             color: #94a3b8;
             font-weight: 600;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #34d399;
+            color: #0f172a;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+            z-index: 100;
+            max-width: 90%;
+        }
+        .toast.visible {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-10px);
+        }
+        .toast.error {
+            background: #f87171;
+            color: #0f172a;
         }
 
         /* Scrollbar */
@@ -476,6 +646,13 @@
                 width: 36px;
                 height: 36px;
             }
+            .stats-bar {
+                gap: 4px;
+            }
+            .stat-chip {
+                padding: 4px 8px;
+                font-size: 10px;
+            }
         }
     </style>
 </head>
@@ -484,9 +661,12 @@
         <header class="app-header">
             <div class="header-info">
                 <div class="store-name">
-                    <i class="fa-solid fa-store"></i> Abarrotes Don Pepe
+                    <i class="fa-solid fa-store"></i> Abarrotes Chávez
                 </div>
-                <div class="header-subtitle">Gestión de créditos</div>
+                <div class="header-subtitle">Resumen de créditos activos</div>
+                <div class="stats-bar" id="stats-bar">
+                    <!-- Se llena dinámicamente -->
+                </div>
             </div>
             <div class="fab-add-client" id="fab-add-client" title="Nuevo cliente">
                 <i class="fa-solid fa-plus"></i>
@@ -496,15 +676,24 @@
         <main class="main-content">
             <!-- Panel Clientes -->
             <section id="panel-clientes" class="panel active">
-                <h2 style="font-weight: 700; margin-bottom: 16px; font-size: 20px; display: flex; align-items: center; gap: 8px;">
+                <h2 style="font-weight: 800; margin-bottom: 12px; font-size: 24px; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px;">
                     <i class="fa-solid fa-users" style="color: #818cf8;"></i> Clientes con crédito
                 </h2>
+                <div class="client-tools">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="buscar-cliente" placeholder="Buscar cliente...">
+                    </div>
+                    <button class="btn-ordenar" id="btn-ordenar" title="Ordenar por saldo">
+                        <i class="fa-solid fa-arrow-up-wide-short"></i>
+                    </button>
+                </div>
                 <div id="lista-clientes"></div>
             </section>
 
             <!-- Panel Nueva Compra -->
             <section id="panel-nueva-compra" class="panel">
-                <h2 style="font-weight: 700; margin-bottom: 16px; font-size: 20px; display: flex; align-items: center; gap: 8px;">
+                <h2 style="font-weight: 800; margin-bottom: 16px; font-size: 24px; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px;">
                     <i class="fa-solid fa-cart-plus" style="color: #818cf8;"></i> Nueva Compra
                 </h2>
                 <div class="form-card">
@@ -531,7 +720,7 @@
 
             <!-- Panel Abono -->
             <section id="panel-nuevo-abono" class="panel">
-                <h2 style="font-weight: 700; margin-bottom: 16px; font-size: 20px; display: flex; align-items: center; gap: 8px;">
+                <h2 style="font-weight: 800; margin-bottom: 16px; font-size: 24px; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px;">
                     <i class="fa-solid fa-coins" style="color: #818cf8;"></i> Registrar Abono
                 </h2>
                 <div class="form-card">
@@ -564,9 +753,10 @@
     <!-- Modal Detalle Cliente -->
     <div id="modal-detalle" class="modal">
         <div class="modal-content">
+            <div class="modal-handle"></div>
             <div class="modal-header">
                 <h2 id="detalle-nombre" style="font-weight: 700; display: flex; align-items: center; gap: 8px;"></h2>
-                <button class="cerrar-btn" id="cerrar-modal">&times;</button>
+                <button class="cerrar-btn" id="cerrar-modal" aria-label="Cerrar">&times;</button>
             </div>
             <div id="detalle-contenido"></div>
             <button id="btn-imprimir-comprobante" class="btn-primary" style="margin-top: 15px; background: #34d399; color: #0f172a;">
@@ -578,9 +768,10 @@
     <!-- Modal Nuevo Cliente -->
     <div id="modal-cliente" class="modal">
         <div class="modal-content">
+            <div class="modal-handle"></div>
             <div class="modal-header">
                 <h2><i class="fa-solid fa-user-plus"></i> Nuevo Cliente</h2>
-                <button class="cerrar-btn" id="cancelar-cliente">&times;</button>
+                <button class="cerrar-btn" id="cancelar-cliente" aria-label="Cerrar">&times;</button>
             </div>
             <div class="input-group" style="margin-top: 20px;">
                 <input type="text" id="input-nombre-cliente" placeholder=" ">
@@ -590,61 +781,149 @@
         </div>
     </div>
 
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
     <script>
         (function() {
             const STORAGE_KEY = 'deudoresDark_v1';
             const nombreTienda = "Abarrotes Don Pepe";
             let data = { clientes: [], compras: [], abonos: [] };
+            let searchTerm = '';
+            let sortAsc = false; // false = mayor deuda primero
+
+            // ---------- Utilidades ----------
+            function escapeHtml(texto) {
+                const div = document.createElement('div');
+                div.textContent = texto;
+                return div.innerHTML;
+            }
+
+            function obtenerFechaLocal() {
+                const now = new Date();
+                const offset = now.getTimezoneOffset() * 60000;
+                return new Date(now - offset).toISOString().split('T')[0];
+            }
+
+            function generarId() {
+                return Date.now().toString(36) + Math.random().toString(36).slice(2);
+            }
+
+            function mostrarToast(mensaje, tipo = 'success') {
+                const toast = document.getElementById('toast');
+                toast.textContent = mensaje;
+                toast.className = 'toast visible';
+                if (tipo === 'error') toast.classList.add('error');
+                setTimeout(() => {
+                    toast.classList.remove('visible');
+                }, 2500);
+            }
+
+            // ---------- Persistencia ----------
+            function cargarDatosIniciales() {
+                data = {
+                    clientes: [
+                        { id: '1', nombre: 'María García' },
+                        { id: '2', nombre: 'Juan Pérez' }
+                    ],
+                    compras: [
+                        { id: 'c1', clienteId: '1', fecha: '2026-05-01', items: [
+                            { producto: 'Arroz 1kg', precio: 28.50 },
+                            { producto: 'Aceite', precio: 45.00 }
+                        ], total: 73.50 }
+                    ],
+                    abonos: [
+                        { id: 'a1', clienteId: '1', fecha: '2026-05-02', monto: 30.00 }
+                    ]
+                };
+                guardarDatos();
+            }
 
             function cargarDatos() {
                 const stored = localStorage.getItem(STORAGE_KEY);
                 if (stored) {
-                    data = JSON.parse(stored);
+                    try {
+                        const parsed = JSON.parse(stored);
+                        if (parsed && Array.isArray(parsed.clientes) && Array.isArray(parsed.compras) && Array.isArray(parsed.abonos)) {
+                            data = parsed;
+                        } else {
+                            cargarDatosIniciales();
+                        }
+                    } catch (e) {
+                        cargarDatosIniciales();
+                    }
                 } else {
-                    data = {
-                        clientes: [
-                            { id: '1', nombre: 'María García' },
-                            { id: '2', nombre: 'Juan Pérez' }
-                        ],
-                        compras: [
-                            { id: 'c1', clienteId: '1', fecha: '2026-05-01', items: [
-                                { producto: 'Arroz 1kg', precio: 28.50 },
-                                { producto: 'Aceite', precio: 45.00 }
-                            ], total: 73.50 }
-                        ],
-                        abonos: [
-                            { id: 'a1', clienteId: '1', fecha: '2026-05-02', monto: 30.00 }
-                        ]
-                    };
-                    guardarDatos();
+                    cargarDatosIniciales();
                 }
             }
-            function guardarDatos() { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
-            function generarId() { return Date.now().toString(36) + Math.random().toString(36).substr(2); }
-            function totalCompras(id) { return data.compras.filter(c => c.clienteId === id).reduce((s,c) => s + c.total, 0); }
-            function totalAbonos(id) { return data.abonos.filter(a => a.clienteId === id).reduce((s,a) => s + a.monto, 0); }
-            function saldo(id) { return totalCompras(id) - totalAbonos(id); }
+
+            function guardarDatos() {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            }
+
+            // ---------- Cálculos ----------
+            function totalCompras(id) {
+                return data.compras.filter(c => c.clienteId === id).reduce((s, c) => s + c.total, 0);
+            }
+            function totalAbonos(id) {
+                return data.abonos.filter(a => a.clienteId === id).reduce((s, a) => s + a.monto, 0);
+            }
+            function saldo(id) {
+                return totalCompras(id) - totalAbonos(id);
+            }
+
+            // ---------- Actualización de UI ----------
+            function actualizarStats() {
+                const totalCredito = data.compras.reduce((s, c) => s + c.total, 0);
+                const totalRecuperado = data.abonos.reduce((s, a) => s + a.monto, 0);
+                const pendiente = totalCredito - totalRecuperado;
+                document.getElementById('stats-bar').innerHTML = `
+                    <span class="stat-chip"><i class="fa-solid fa-credit-card"></i> Crédito: $${totalCredito.toFixed(2)}</span>
+                    <span class="stat-chip"><i class="fa-solid fa-circle-check"></i> Recuperado: $${totalRecuperado.toFixed(2)}</span>
+                    <span class="stat-chip"><i class="fa-solid fa-hourglass-half"></i> Pendiente: $${pendiente.toFixed(2)}</span>
+                `;
+            }
 
             function actualizarListaClientes() {
                 const container = document.getElementById('lista-clientes');
-                if (data.clientes.length === 0) {
+                let clientesFiltrados = data.clientes.filter(c => c.nombre.toLowerCase().includes(searchTerm.toLowerCase()));
+                // Ordenar por saldo
+                clientesFiltrados.sort((a, b) => {
+                    const saldoA = saldo(a.id);
+                    const saldoB = saldo(b.id);
+                    return sortAsc ? saldoA - saldoB : saldoB - saldoA;
+                });
+
+                if (clientesFiltrados.length === 0) {
                     container.innerHTML = '<div style="text-align: center; color: #64748b; padding: 40px;">No hay clientes registrados.</div>';
                     return;
                 }
-                container.innerHTML = data.clientes.map(cliente => {
+
+                container.innerHTML = clientesFiltrados.map(cliente => {
                     const saldoVal = saldo(cliente.id);
                     const alDia = saldoVal <= 0;
+                    const deudaAlta = saldoVal > 500;
+                    const progress = totalCompras(cliente.id) > 0 ? Math.min((totalAbonos(cliente.id) / totalCompras(cliente.id)) * 100, 100) : 0;
+                    const badgeClass = alDia ? 'verde' : (deudaAlta ? 'naranja' : 'rojo');
+                    const cardClass = alDia ? 'deuda-verde' : (deudaAlta ? 'deuda-naranja' : 'deuda-roja');
+                    const barClass = alDia ? '' : (deudaAlta ? 'naranja' : 'roja');
+
                     return `
-                        <div class="cliente-card" data-id="${cliente.id}">
+                        <div class="cliente-card ${cardClass}" data-id="${cliente.id}">
                             <div class="cliente-info" onclick="mostrarDetalle('${cliente.id}')">
-                                <div class="avatar">${cliente.nombre.charAt(0)}</div>
+                                <div class="avatar">${escapeHtml(cliente.nombre.charAt(0))}</div>
                                 <div class="cliente-detalles">
-                                    <span class="nombre-cliente">${cliente.nombre}</span>
-                                    <span class="badge-deuda ${alDia ? 'verde' : 'rojo'}">${alDia ? 'Al día' : 'Debe: $' + saldoVal.toFixed(2)}</span>
+                                    <span class="nombre-cliente">${escapeHtml(cliente.nombre)}</span>
+                                    <span class="badge-deuda ${badgeClass}">${alDia ? 'Al día' : 'Debe: $' + saldoVal.toFixed(2)}</span>
+                                    <div class="progreso-pago">
+                                        <div class="barra ${barClass}" style="width: ${progress}%;"></div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="acciones-cliente">
-                                <button class="btn-icono" onclick="event.stopPropagation(); eliminarCliente('${cliente.id}')" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                                <button class="btn-icono" onclick="event.stopPropagation(); eliminarCliente('${cliente.id}')" title="Eliminar" aria-label="Eliminar cliente">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
                             </div>
                         </div>
                     `;
@@ -652,18 +931,20 @@
             }
 
             function actualizarSelects() {
-                const opts = data.clientes.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
-                document.getElementById('select-cliente-compra').innerHTML = '<option value="" disabled selected></option>' + opts;
-                document.getElementById('select-cliente-abono').innerHTML = '<option value="" disabled selected></option>' + opts;
+                const opts = data.clientes.map(c => `<option value="${c.id}">${escapeHtml(c.nombre)}</option>`).join('');
+                const selectCompra = document.getElementById('select-cliente-compra');
+                const selectAbono = document.getElementById('select-cliente-abono');
+                selectCompra.innerHTML = '<option value="" disabled selected></option>' + opts;
+                selectAbono.innerHTML = '<option value="" disabled selected></option>' + opts;
             }
 
             function renderizarProductos() {
                 const cont = document.getElementById('productos-container');
                 cont.innerHTML = `
                     <div class="producto-linea">
-                        <input type="text" placeholder="Producto" class="input-producto">
-                        <input type="number" placeholder="0.00" step="0.01" class="input-precio" value="0">
-                        <button class="btn-icono eliminar-producto" style="display:none;"><i class="fa-solid fa-xmark"></i></button>
+                        <input type="text" placeholder="Producto" class="input-producto" aria-label="Producto">
+                        <input type="number" placeholder="0.00" step="0.01" class="input-precio" value="0" aria-label="Precio">
+                        <button class="btn-icono eliminar-producto" style="display:none;" aria-label="Eliminar producto"><i class="fa-solid fa-xmark"></i></button>
                     </div>`;
                 const linea = cont.querySelector('.producto-linea');
                 linea.querySelector('.input-producto').addEventListener('input', calcTotal);
@@ -677,9 +958,9 @@
                 const div = document.createElement('div');
                 div.className = 'producto-linea';
                 div.innerHTML = `
-                    <input type="text" placeholder="Producto" class="input-producto">
-                    <input type="number" placeholder="0.00" step="0.01" class="input-precio" value="0">
-                    <button class="btn-icono eliminar-producto"><i class="fa-solid fa-xmark"></i></button>`;
+                    <input type="text" placeholder="Producto" class="input-producto" aria-label="Producto">
+                    <input type="number" placeholder="0.00" step="0.01" class="input-precio" value="0" aria-label="Precio">
+                    <button class="btn-icono eliminar-producto" aria-label="Eliminar producto"><i class="fa-solid fa-xmark"></i></button>`;
                 cont.appendChild(div);
                 div.querySelector('.input-producto').addEventListener('input', calcTotal);
                 div.querySelector('.input-precio').addEventListener('input', calcTotal);
@@ -694,7 +975,10 @@
 
             function actualizarBotonesEliminar() {
                 const lineas = document.querySelectorAll('#productos-container .producto-linea');
-                lineas.forEach(l => l.querySelector('.eliminar-producto').style.display = lineas.length > 1 ? 'flex' : 'none');
+                lineas.forEach(l => {
+                    const btn = l.querySelector('.eliminar-producto');
+                    btn.style.display = lineas.length > 1 ? 'flex' : 'none';
+                });
             }
 
             function calcTotal() {
@@ -703,12 +987,7 @@
                 document.getElementById('total-compra').textContent = total.toFixed(2);
             }
 
-					  function obtenerFechaLocal() {
-							const now = new Date();
-              const offset = now.getTimezoneOffset() * 60000;
-							return new Date(now - offset).toISOString().split('T')[0];
-						}
-
+            // ---------- Acciones ----------
             function guardarCompra() {
                 const clienteId = document.getElementById('select-cliente-compra').value;
                 const fecha = document.getElementById('fecha-compra').value;
@@ -718,26 +997,36 @@
                     const precio = parseFloat(linea.querySelector('.input-precio').value) || 0;
                     if (prod && precio > 0) items.push({ producto: prod, precio });
                 });
-                if (!clienteId || !fecha || items.length === 0) return alert('Complete los campos correctamente.');
-                data.compras.push({ id: generarId(), clienteId, fecha, items, total: items.reduce((s,i) => s + i.precio, 0) });
+                if (!clienteId || !fecha || items.length === 0) {
+                    mostrarToast('Complete los campos correctamente.', 'error');
+                    return;
+                }
+                data.compras.push({ id: generarId(), clienteId, fecha, items, total: items.reduce((s, i) => s + i.precio, 0) });
                 guardarDatos();
                 actualizarListaClientes();
+                actualizarStats();
                 document.getElementById('fecha-compra').value = obtenerFechaLocal();
+                document.getElementById('select-cliente-compra').value = '';
                 renderizarProductos();
-                alert('Compra registrada exitosamente.');
+                mostrarToast('Compra registrada exitosamente.');
             }
 
             function guardarAbono() {
                 const clienteId = document.getElementById('select-cliente-abono').value;
                 const fecha = document.getElementById('fecha-abono').value;
                 const monto = parseFloat(document.getElementById('monto-abono').value);
-                if (!clienteId || !fecha || !monto || monto <= 0) return alert('Complete los campos correctamente.');
+                if (!clienteId || !fecha || !monto || monto <= 0) {
+                    mostrarToast('Complete los campos correctamente.', 'error');
+                    return;
+                }
                 data.abonos.push({ id: generarId(), clienteId, fecha, monto });
                 guardarDatos();
                 actualizarListaClientes();
+                actualizarStats();
                 document.getElementById('fecha-abono').value = obtenerFechaLocal();
                 document.getElementById('monto-abono').value = '';
-                alert('Abono registrado exitosamente.');
+                document.getElementById('select-cliente-abono').value = '';
+                mostrarToast('Abono registrado exitosamente.');
             }
 
             window.eliminarCliente = function(id) {
@@ -748,29 +1037,32 @@
                 guardarDatos();
                 actualizarListaClientes();
                 actualizarSelects();
+                actualizarStats();
+                document.getElementById('modal-detalle').style.display = 'none';
+                mostrarToast('Cliente eliminado.');
             };
 
             window.mostrarDetalle = function(id) {
                 const cliente = data.clientes.find(c => c.id === id);
                 if (!cliente) return;
-                const compras = data.compras.filter(c => c.clienteId === id).sort((a,b) => b.fecha.localeCompare(a.fecha));
-                const abonos = data.abonos.filter(a => a.clienteId === id).sort((a,b) => b.fecha.localeCompare(a.fecha));
+                const compras = data.compras.filter(c => c.clienteId === id).sort((a, b) => b.fecha.localeCompare(a.fecha));
+                const abonos = data.abonos.filter(a => a.clienteId === id).sort((a, b) => b.fecha.localeCompare(a.fecha));
                 const totalC = totalCompras(id);
                 const totalA = totalAbonos(id);
                 const saldoVal = totalC - totalA;
 
-                document.getElementById('detalle-nombre').innerHTML = `<i class="fa-solid fa-user"></i> ${cliente.nombre}`;
+                document.getElementById('detalle-nombre').innerHTML = `<i class="fa-solid fa-user"></i> ${escapeHtml(cliente.nombre)}`;
                 let html = `
                     <p><strong>Total compras:</strong> $${totalC.toFixed(2)}</p>
                     <p><strong>Total abonos:</strong> $${totalA.toFixed(2)}</p>
-                    <p style="font-size:18px;"><strong>Saldo:</strong> <span style="color:${saldoVal>0?'#f87171':'#34d399'}">$${saldoVal.toFixed(2)}</span></p>
+                    <p style="font-size:18px;"><strong>Saldo:</strong> <span style="color:${saldoVal > 0 ? '#fb7185' : '#34d399'}">$${saldoVal.toFixed(2)}</span></p>
                     <h4 style="margin-top:20px;">Compras</h4>
                     ${compras.length ? '<table class="detalle-tabla"><tr><th>Fecha</th><th>Producto</th><th>Precio</th></tr>' : 'Sin compras'}
-                    ${compras.flatMap(c => c.items.map(item => `<tr><td>${c.fecha}</td><td>${item.producto}</td><td>$${item.precio.toFixed(2)}</td></tr>`)).join('')}
+                    ${compras.flatMap(c => c.items.map(item => `<tr><td>${escapeHtml(c.fecha)}</td><td>${escapeHtml(item.producto)}</td><td>$${item.precio.toFixed(2)}</td></tr>`)).join('')}
                     ${compras.length ? '</table>' : ''}
                     <h4 style="margin-top:20px;">Abonos</h4>
                     ${abonos.length ? '<table class="detalle-tabla"><tr><th>Fecha</th><th>Monto</th></tr>' : 'Sin abonos'}
-                    ${abonos.map(a => `<tr><td>${a.fecha}</td><td>$${a.monto.toFixed(2)}</td></tr>`).join('')}
+                    ${abonos.map(a => `<tr><td>${escapeHtml(a.fecha)}</td><td>$${a.monto.toFixed(2)}</td></tr>`).join('')}
                     ${abonos.length ? '</table>' : ''}
                 `;
                 document.getElementById('detalle-contenido').innerHTML = html;
@@ -778,20 +1070,25 @@
 
                 document.getElementById('btn-imprimir-comprobante').onclick = () => {
                     const ventana = window.open('', '_blank', 'width=800,height=600');
+                    if (!ventana) {
+                        mostrarToast('Permite las ventanas emergentes para imprimir.', 'error');
+                        return;
+                    }
                     ventana.document.write(`
                         <html><head><title>Comprobante</title>
                         <style>body{font-family:monospace;margin:30px} table{border-collapse:collapse;width:100%} th,td{border:1px solid #000;padding:6px}</style>
                         </head><body>
-                        <h2>${nombreTienda}</h2><h3>Comprobante de cuenta</h3>
-                        <p>Cliente: ${cliente.nombre} - ${new Date().toLocaleDateString()}</p>
-                        <h4>Compras</h4><table>${compras.flatMap(c => c.items.map(i => `<tr><td>${c.fecha}</td><td>${i.producto}</td><td>$${i.precio.toFixed(2)}</td></tr>`)).join('')}</table>
+                        <h2>${escapeHtml(nombreTienda)}</h2><h3>Comprobante de cuenta</h3>
+                        <p>Cliente: ${escapeHtml(cliente.nombre)} - ${new Date().toLocaleDateString()}</p>
+                        <h4>Compras</h4><table>${compras.flatMap(c => c.items.map(i => `<tr><td>${escapeHtml(c.fecha)}</td><td>${escapeHtml(i.producto)}</td><td>$${i.precio.toFixed(2)}</td></tr>`)).join('')}</table>
                         <p>Total compras: $${totalC.toFixed(2)}</p>
-                        <h4>Abonos</h4>${abonos.map(a => `<p>${a.fecha}: $${a.monto.toFixed(2)}</p>`).join('')}
-                        <p>Total abonos: $${totalA.toFixed(2)}</p><h3>Saldo: $${saldoVal.toFixed(2)} ${saldoVal===0?'✅ LIQUIDADO':''}</h3>
+                        <h4>Abonos</h4>${abonos.map(a => `<p>${escapeHtml(a.fecha)}: $${a.monto.toFixed(2)}</p>`).join('')}
+                        <p>Total abonos: $${totalA.toFixed(2)}</p><h3>Saldo: $${saldoVal.toFixed(2)} ${saldoVal === 0 ? '✅ LIQUIDADO' : ''}</h3>
                         <button onclick="window.print();">Imprimir</button>
                         </body></html>
                     `);
                     ventana.document.close();
+                    ventana.onload = () => ventana.print();
                 };
             };
 
@@ -802,11 +1099,13 @@
                 document.querySelector(`.nav-item[data-panel="${panelId}"]`).classList.add('active');
             }
 
+            // ---------- Inicialización ----------
             function iniciar() {
                 cargarDatos();
                 actualizarListaClientes();
                 actualizarSelects();
-                const hoy = new Date().toISOString().split('T')[0];
+                actualizarStats();
+                const hoy = obtenerFechaLocal();
                 document.getElementById('fecha-compra').value = hoy;
                 document.getElementById('fecha-abono').value = hoy;
                 renderizarProductos();
@@ -816,18 +1115,36 @@
                     btn.addEventListener('click', () => cambiarPanel(btn.dataset.panel));
                 });
 
-                // Cliente modal
+                // Buscador
+                document.getElementById('buscar-cliente').addEventListener('input', (e) => {
+                    searchTerm = e.target.value;
+                    actualizarListaClientes();
+                });
+
+                // Ordenamiento
+                document.getElementById('btn-ordenar').addEventListener('click', () => {
+                    sortAsc = !sortAsc;
+                    document.getElementById('btn-ordenar').innerHTML = sortAsc ? '<i class="fa-solid fa-arrow-down-wide-short"></i>' : '<i class="fa-solid fa-arrow-up-wide-short"></i>';
+                    actualizarListaClientes();
+                });
+
+                // Modal cliente
                 document.getElementById('fab-add-client').addEventListener('click', () => document.getElementById('modal-cliente').style.display = 'flex');
                 document.getElementById('cancelar-cliente').addEventListener('click', () => document.getElementById('modal-cliente').style.display = 'none');
                 document.getElementById('btn-guardar-cliente').addEventListener('click', () => {
                     const nombre = document.getElementById('input-nombre-cliente').value.trim();
-                    if (!nombre) return alert('Ingrese un nombre');
+                    if (!nombre) {
+                        mostrarToast('Ingrese un nombre.', 'error');
+                        return;
+                    }
                     data.clientes.push({ id: generarId(), nombre });
                     guardarDatos();
                     actualizarListaClientes();
                     actualizarSelects();
+                    actualizarStats();
                     document.getElementById('modal-cliente').style.display = 'none';
                     document.getElementById('input-nombre-cliente').value = '';
+                    mostrarToast('Cliente agregado exitosamente.');
                 });
 
                 document.getElementById('cerrar-modal').addEventListener('click', () => document.getElementById('modal-detalle').style.display = 'none');
@@ -835,11 +1152,18 @@
                     if (e.target === document.getElementById('modal-detalle')) document.getElementById('modal-detalle').style.display = 'none';
                     if (e.target === document.getElementById('modal-cliente')) document.getElementById('modal-cliente').style.display = 'none';
                 });
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        document.getElementById('modal-detalle').style.display = 'none';
+                        document.getElementById('modal-cliente').style.display = 'none';
+                    }
+                });
 
                 document.getElementById('btn-agregar-producto').addEventListener('click', agregarLineaProducto);
                 document.getElementById('btn-guardar-compra').addEventListener('click', guardarCompra);
                 document.getElementById('btn-guardar-abono').addEventListener('click', guardarAbono);
             }
+
             iniciar();
         })();
     </script>
