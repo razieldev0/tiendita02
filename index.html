@@ -97,26 +97,6 @@
             color: #c7d2fe;
             font-weight: 500;
         }
-        .stats-bar {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-            flex-wrap: wrap;
-        }
-        .stat-chip {
-            background: rgba(255,255,255,0.08);
-            border-radius: 20px;
-            padding: 6px 12px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #e0e7ff;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .stat-chip i {
-            font-size: 14px;
-        }
         .fab-add-client {
             width: 48px;
             height: 48px;
@@ -182,15 +162,6 @@
             background: transparent;
             flex: 1;
             text-align: center;
-        }
-        .nav-item.active {
-            color: #fff;
-            background: rgba(129, 140, 248, 0.25);
-            box-shadow: 0 2px 8px rgba(129, 140, 248, 0.2);
-        }
-        .nav-item i {
-            font-size: 20px;
-            margin-bottom: 2px;
         }
 
         /* Paneles */
@@ -1436,10 +1407,6 @@
                 <div class="store-name">
                     <i class="fa-solid fa-store"></i> Abarrotes Chávez
                 </div>
-                <div class="header-subtitle">Resumen de créditos activos</div>
-                <div class="stats-bar" id="stats-bar">
-                    <!-- Se llena dinámicamente -->
-                </div>
             </div>
             <button class="fab-add-client" id="fab-add-client" type="button" title="Nuevo cliente" aria-label="Nuevo cliente">
                 <i class="fa-solid fa-plus"></i>
@@ -1780,17 +1747,6 @@
                 }).join('');
             }
 
-            function actualizarStats() {
-                const totalCredito = data.compras.reduce((s, c) => s + c.total, 0);
-                const totalRecuperado = data.abonos.reduce((s, a) => s + a.monto, 0);
-                const pendiente = totalCredito - totalRecuperado;
-                document.getElementById('stats-bar').innerHTML = `
-                    <span class="stat-chip"><i class="fa-solid fa-credit-card"></i> Crédito: $${totalCredito.toFixed(2)}</span>
-                    <span class="stat-chip"><i class="fa-solid fa-circle-check"></i> Recuperado: $${totalRecuperado.toFixed(2)}</span>
-                    <span class="stat-chip"><i class="fa-solid fa-hourglass-half"></i> Pendiente: $${pendiente.toFixed(2)}</span>
-                `;
-            }
-
             function actualizarListaClientes() {
                 const container = document.getElementById('lista-clientes');
                 let clientesFiltrados = data.clientes.filter(c =>
@@ -1933,7 +1889,6 @@
                 data.compras.push({ id: generarId(), clienteId, fecha, items, total: items.reduce((s, i) => s + i.precio, 0) });
                 guardarDatos();
                 actualizarListaClientes();
-                actualizarStats();
                 actualizarDashboard();
                 document.getElementById('fecha-compra').value = obtenerFechaLocal();
                 document.getElementById('select-cliente-compra').value = '';
@@ -1952,7 +1907,6 @@
                 data.abonos.push({ id: generarId(), clienteId, fecha, monto });
                 guardarDatos();
                 actualizarListaClientes();
-                actualizarStats();
                 actualizarDashboard();
                 document.getElementById('fecha-abono').value = obtenerFechaLocal();
                 document.getElementById('monto-abono').value = '';
@@ -2018,7 +1972,6 @@
                 guardarDatos();
                 actualizarListaClientes();
                 actualizarSelects();
-                actualizarStats();
                 actualizarDashboard();
                 document.getElementById('modal-detalle').style.display = 'none';
                 document.getElementById('modal-confirmar').style.display = 'none';
@@ -2152,7 +2105,6 @@
                 cargarDatos();
                 actualizarListaClientes();
                 actualizarSelects();
-                actualizarStats();
                 actualizarDashboard();
                 cambiarPanel('inicio');
                 const hoy = obtenerFechaLocal();
@@ -2221,7 +2173,6 @@
                     guardarDatos();
                     actualizarListaClientes();
                     actualizarSelects();
-                    actualizarStats();
                     actualizarDashboard();
 
                     input.value = '';
